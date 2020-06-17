@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 SoftwareSerial sim808(7,6);
 String buff_data;
-char phone_no[] = "0346067481"; // replace with your phone no.
+char phone_no[] = "0797582335"; // replace with your phone no.
 String data[5];
 #define DEBUG true
 String state,timegps,latitude,longitude;
@@ -55,7 +55,9 @@ void loop()
       sim808.print("AT+CMGS=\"");
       sim808.print(phone_no);
       sim808.println("\"");
-      
+      sim808.print(latitude);
+      sim808.print(",");
+      sim808.print (longitude);
       delay(300);
       sim808.print("http://maps.google.com/maps?q=loc:");
       sim808.print(latitude);
