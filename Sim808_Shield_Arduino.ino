@@ -15,6 +15,7 @@ attachInterrupt(digitalPinToInterrupt(3),buttonPressed2,RISING);
 pinMode(4,OUTPUT);       
 digitalWrite(4,output);     //Turns LED ON or OFF depending upon output value
 sim808.print("AT+CMGF=1\r");
+sim808.print("AT+CNMI=2,2,0,0,0\r");
 delay(400);
 sendData("AT+CGATT?",1000,DEBUG);
 delay(50);
@@ -30,13 +31,39 @@ void loop()
   {
     buff_data = sim808.readString();
     delay(100);
-    int str_len = buff_data.length() + 1; 
-    // Prepare the character array (the buffer) 
+    int str_len = buff_data.length() + 1; // Prepare the character array (the buffer) 
     char char_array[str_len];
-    // Copy it over 
-    buff_data.toCharArray(char_array, str_len);  
-    if(char_array[2]=='R' && char_array[3]=='I'  )
-      {
+    buff_data.toCharArray(char_array, str_len);
+  if ( buff_data == "ON")
+  {
+     output = HIGH;               //Change Output value to HIGH 
+     digitalWrite(4,output);     //Turns LED ON or OFF depending upon output value   
+     delay(100);    
+
+     sim808.print("AT+CMGS=\"");
+     sim808.print(phone_no);
+     sim808.println("\"");
+     sim808.print("Thiet bi da Bat");
+     delay(200);
+     sim808.println((char)26); // End AT command with a ^Z, ASCII code 26
+     delay(200);
+  }
+  if (buff_data == "OFF")
+  {
+     output = LOW;                //Change Output value to LOW
+     digitalWrite(4,output);     //Turns LED ON or OFF depending upon output value 
+     delay(100);
+
+     sim808.print("AT+CMGS=\"");
+     sim808.print(phone_no);
+     sim808.println("\"");
+     sim808.print("Thiet bi da Tat");
+     delay(200);
+     sim808.println((char)26); // End AT command with a ^Z, ASCII code 26
+     delay(200);
+  }
+  if(char_array[2]=='R' && char_array[3]=='I'  )
+  {
       Serial.println("GPS CHECKING");
       sim808.print("AT+CMGF=1\r");
       delay(400);
